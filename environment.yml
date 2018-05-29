@@ -1,0 +1,6 @@
+name: turnpoint
+dependencies:
+- python=3
+- requests
+- python-dateutil
+- numpy
