@@ -63,4 +63,7 @@ for flight in skylines_flights:
     new_flights[str(flight['id'])] = flight_data
 
 combined_flights = {**existing_flights, **new_flights}
-json.dump(combined_flights, flights_file.open('w'))
+with flights_file.open('w') as f:
+    json.dump(combined_flights, f)
+
+
