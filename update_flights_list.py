@@ -10,6 +10,7 @@ import turnpoint
 import requests
 from pathlib import Path
 import json
+import shutil
 
 cupname = 'finland_2014.cup'
 year = 2018
@@ -66,4 +67,6 @@ combined_flights = {**existing_flights, **new_flights}
 with flights_file.open('w') as f:
     json.dump(combined_flights, f)
 
+contest_dir = Path.home() / Path('www/kaannepistekisa2018')
+shutil.copy(flights_file, contest_dir)
 
