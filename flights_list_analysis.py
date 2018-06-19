@@ -11,10 +11,12 @@ import json
 import skylines
 
 def get_pilots(flights):
-    return list(set(flights[flight]['pilot'] for flight in flights))
+    a = set(flights[flight]['pilot'] for flight in flights if flights[flight]['pilot'] is not None)
+    b = set(flights[flight]['copilot'] for flight in flights if flights[flight]['copilot'] is not None)
+    return list(a.union(b))
 
 def flights_by_pilot(flights, pilot):
-    return {k: v for k, v in flights.items() if v['pilot'] == pilot}
+    return {k: v for k, v in flights.items() if ((v['pilot'] == pilot or v['copilot'] == pilot) and v['plane'] in ['OH-952','OH-733','OH-883','OH-787','OH-650'])}
 
 def visited_by_pilot(flights):
     pilots = get_pilots(flights)
