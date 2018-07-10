@@ -9,6 +9,7 @@ from pathlib import Path
 import datetime
 import json
 import skylines
+import shutil
 
 PIK_planes = ['OH-952','OH-733','OH-883','OH-787','OH-650']
 
@@ -45,6 +46,20 @@ with flights_file.open() as f:
     flights = json.load(f)
     
 visited_with_dates = visited_by_pilot(flights)
+
+visits_filename = f'pilot_turnpoint_visits_{year}.txt'
+visits_file = script_dir / visits_filename
+
+json_string = json.dumps(visited_with_dates)
+visits_file.write_text(json_string)
+
+
+contest_dir = Path.home() / 'www' / 'kaannepistekisa2018'
+shutil.copy(visits_file, contest_dir / visits_file.name)
+
+js_string = f"visits = {json_string};"
+(contest_dir / visits_file.with_suffix('.js').name).write_text(js_string)
+
 
 visited_number = {k: len(v) for k, v in visited_with_dates.items()}
 pilot_names = skylines.get_club_pilots()
