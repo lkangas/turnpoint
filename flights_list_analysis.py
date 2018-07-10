@@ -25,7 +25,6 @@ def earliest_visited(pilot_flights, turnpoint):
 
 def visited_by_pilot(flights):
     pilots = get_pilots(flights)
-    turned = {}
     turned_with_dates = {}
     for pilot in pilots:
         all_points = []
@@ -36,18 +35,20 @@ def visited_by_pilot(flights):
                 
         unique_points = sorted(list(set(all_points)))
         turned_with_dates[pilot] = {point: earliest_visited(pilot_flights, point) for point in unique_points}
-    return turned, turned_with_dates
+    return turned_with_dates
 
-
+script_dir = Path(__file__).resolve().parent
+cupname = 'finland_2014.cup'
+cupfile = script_dir / cupname
 year = datetime.datetime.now().year
-flights_file = Path(f'flights_{year}.txt')
+flights_file = script_dir / f'flights_{year}.txt'
 
 with flights_file.open() as f:
     flights = json.load(f)
     
-visited_points, visited_with_dates = visited_by_pilot(flights)
-pilot_names = skylines.get_club_pilots()
-visited_number = {k: len(v) for k, v in visited_with_dates.items()}
+visited_with_dates = visited_by_pilot(flights)
 
+visited_number = {k: len(v) for k, v in visited_with_dates.items()}
+pilot_names = skylines.get_club_pilots()
 for pilot_id in sorted(visited_number, key=visited_number.get, reverse=True):
     print(pilot_names[pilot_id], visited_number[pilot_id])
