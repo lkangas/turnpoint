@@ -38,8 +38,6 @@ def visited_by_pilot(flights):
     return turned_with_dates
 
 script_dir = Path(__file__).resolve().parent
-cupname = 'finland_2014.cup'
-cupfile = script_dir / cupname
 year = datetime.datetime.now().year
 flights_file = script_dir / f'flights_{year}.txt'
 
