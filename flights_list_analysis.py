@@ -47,6 +47,13 @@ with flights_file.open() as f:
     
 visited_with_dates = visited_by_pilot(flights)
 
+ordered = {}
+
+for key in sorted(visited_with_dates, key=lambda x: len(visited_with_dates[x]), reverse=True):
+    ordered[key] = visited_with_dates[key]
+    
+visited_with_dates = ordered
+
 visits_filename = f'pilot_turnpoint_visits_{year}.txt'
 visits_file = script_dir / visits_filename
 
@@ -63,5 +70,6 @@ js_string = f"visits = {json_string};"
 
 visited_number = {k: len(v) for k, v in visited_with_dates.items()}
 pilot_names = skylines.get_club_pilots()
-for pilot_id in sorted(visited_number, key=visited_number.get, reverse=True):
+
+for pilot_id in sorted(visited_number, key=lambda x: len(visited_with_dates[x]), reverse=True):
     print(pilot_names[pilot_id], visited_number[pilot_id])
