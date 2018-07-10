@@ -69,7 +69,7 @@ combined_flights = {**existing_flights, **new_flights}
 with flights_file.open('w') as f:
     json.dump(combined_flights, f)
 
-contest_dir = Path.home() / Path('www/kaannepistekisa2018')
+contest_dir = Path.home() / 'www' / 'kaannepistekisa2018'
 
 js_string = f"flights = {json.dumps(combined_flights)};"
 
