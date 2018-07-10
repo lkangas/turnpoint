@@ -12,9 +12,11 @@ from pathlib import Path
 import json
 import shutil
 
+script_dir = Path(__file__).resolve().parent
 cupname = 'finland_2014.cup'
+cupfile = script_dir / cupname
 year = 2018
-flights_file = Path(f'flights_{year}.txt')
+flights_file = script_dir / f'flights_{year}.txt'
 existing_flights = dict()
 
 if flights_file.exists():
@@ -22,7 +24,7 @@ if flights_file.exists():
         existing_flights = json.loads(f.read())
         
 
-all_turnpoints = turnpoint.read_cup(cupname)
+all_turnpoints = turnpoint.read_cup(cupfile)
 
 print("getting flights")
 skylines_flights = skylines.get_flights(year)
@@ -68,5 +70,8 @@ with flights_file.open('w') as f:
     json.dump(combined_flights, f)
 
 contest_dir = Path.home() / Path('www/kaannepistekisa2018')
-shutil.copy(flights_file, contest_dir)
+
+js_string = f"flights = {json.dumps(combined_flights)};"
+
+(contest_dir / flights_file.with_suffix('.js').name).write_text(js_string)
 
