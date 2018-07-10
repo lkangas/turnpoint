@@ -20,18 +20,24 @@ def get_pilots(flights):
 def flights_by_pilot(flights, pilot):
     return {k: v for k, v in flights.items() if ((v['pilot'] == pilot or v['copilot'] == pilot) and v['plane'] in PIK_planes)}
 
+def earliest_visited(pilot_flights, turnpoint):
+    return min([pilot_flights[flight_id]['date'] for flight_id in pilot_flights if turnpoint in pilot_flights[flight_id]['visited']])
+
 def visited_by_pilot(flights):
     pilots = get_pilots(flights)
     turned = {}
+    turned_with_dates = {}
     for pilot in pilots:
         all_points = []
         pilot_flights = flights_by_pilot(flights, pilot)
         for flight in pilot_flights:
-            all_points += pilot_flights[flight]['visited']
+            visited = pilot_flights[flight]['visited']
+            all_points += visited
+                
         turned[pilot] = sorted(list(set(all_points)))
-        
-    return turned
-    
+        turned_with_dates[pilot] = {point: earliest_visited(pilot_flights, point) for point in turned[pilot]}
+    return turned, turned_with_dates
+
 
 year = datetime.datetime.now().year
 flights_file = Path(f'flights_{year}.txt')
@@ -39,7 +45,7 @@ flights_file = Path(f'flights_{year}.txt')
 with flights_file.open() as f:
     flights = json.load(f)
     
-visited_points = visited_by_pilot(flights)
+visited_points, visited_with_dates = visited_by_pilot(flights)
 pilot_names = skylines.get_club_pilots()
 visited_number = {k: len(v) for k, v in visited_points.items()}
 
